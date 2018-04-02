@@ -1,8 +1,7 @@
 import requests as req
 import json
 import uuid
-
-KASA_URL = 'https://wap.tplinkcloud.com'
+from const import *
 
 def getKasaAPIToken() -> str:
     # get a random uuid4 as client id
@@ -26,11 +25,13 @@ def getKasaAPIToken() -> str:
 
     resp = req.post(KASA_URL, json=payload)
     resp_j = resp.json()
-    return resp_j['result']['token']
+    token = resp_j['result']['token']
+    #with open('.token', 'w') as token_f:
+    #    token_f.write(token)
+    #    token_f.write('\n')
+
+    return token
 
 if __name__ == '__main__':
     token = getKasaAPIToken()
-    with open('.token', 'w') as token_f:
-        token_f.write(token)
-        token_f.write('\n')
 

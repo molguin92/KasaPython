@@ -1,13 +1,28 @@
-import requests as req
+#!/usr/bin/env python3
 from get_token import *
+import click
 
-def getDeviceList() -> dict:
+
+@click.group()
+def control():
+    pass
+
+
+@control.command('DeviceList')
+def getDeviceList() -> None:
     token = getKasaAPIToken()
     params = {'token': token}
 
     resp = req.post(KASA_URL, params=params, json=KASA_DVC_LIST_REQ)
-    return resp.json()
+    devices = resp.json()['result']['deviceList']
+
+    print('{:40s} \t {:40s} \t {:40s}'.format('Device', 'Model', 'ID'))
+    for dev in devices:
+        print('{:40s} \t {:40s} \t {:40s}'.format(dev['alias'],
+                                                  (dev['deviceModel'] + ' ' +
+                                                   dev['deviceName']),
+                                                  dev['deviceId']))
+
 
 if __name__ == '__main__':
-    import pprint
-    pprint.PrettyPrinter(indent=4).pprint(getDeviceList())
+    control()

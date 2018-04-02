@@ -9,10 +9,15 @@ KASA_DVC_CONTROL_REQ = {
     }
 }
 
-KASA_REQ_DATA_DVC_CONTROL = {
+REQ_DATA_SET_STATE = {
     'system': {
         'set_relay_state': {
             'state': None
         }
     }
+}
+
+REQ_DATA_GET_INFO = {
+    'system': {'get_sysinfo': None},
+    'emeter': {'get_realtime': None}
 }

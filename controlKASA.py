@@ -25,12 +25,12 @@ def getDeviceList() -> None:
 
 
 @control.command('TurnOff')
-@click.argument('device')
+@click.argument('device', type=str)
 def turnOff(device: str) -> None:
-    KASA_REQ_DATA_DVC_CONTROL['system']['set_relay_state']['state'] = 0
+    REQ_DATA_SET_STATE['system']['set_relay_state']['state'] = 0
     KASA_DVC_CONTROL_REQ['params']['deviceId'] = device
     KASA_DVC_CONTROL_REQ['params'] \
-        ['requestData'] = json.dumps(KASA_REQ_DATA_DVC_CONTROL)
+        ['requestData'] = json.dumps(REQ_DATA_SET_STATE)
 
     params = {'token': getKasaAPIToken()}
     resp = req.post(KASA_APP_SERVER_URL,
@@ -38,16 +38,30 @@ def turnOff(device: str) -> None:
 
 
 @control.command('TurnOn')
-@click.argument('device')
+@click.argument('device', type=str)
 def turnOn(device: str) -> None:
-    KASA_REQ_DATA_DVC_CONTROL['system']['set_relay_state']['state'] = 1
+    REQ_DATA_SET_STATE['system']['set_relay_state']['state'] = 1
     KASA_DVC_CONTROL_REQ['params']['deviceId'] = device
     KASA_DVC_CONTROL_REQ['params'] \
-        ['requestData'] = json.dumps(KASA_REQ_DATA_DVC_CONTROL)
+        ['requestData'] = json.dumps(REQ_DATA_SET_STATE)
 
     params = {'token': getKasaAPIToken()}
     resp = req.post(KASA_APP_SERVER_URL,
                     params=params, json=KASA_DVC_CONTROL_REQ)
+
+
+@control.command('GetInfo')
+@click.argument('device', type=str)
+def getInfo(device: str) -> None:
+    KASA_DVC_CONTROL_REQ['params']['deviceId'] = device
+    KASA_DVC_CONTROL_REQ['params'] \
+        ['requestData'] = json.dumps(REQ_DATA_GET_INFO)
+
+    params = {'token': getKasaAPIToken()}
+    resp = req.post(KASA_APP_SERVER_URL,
+                    params=params, json=KASA_DVC_CONTROL_REQ)
+    print(resp.json())
+    print(json.loads(resp.json()['result']['responseData']))
 
 
 if __name__ == '__main__':
